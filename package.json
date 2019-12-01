@@ -1,5 +1,5 @@
 {
-  "name": "@creativejoe007/react-native-rave-webview",
+  "name": "@nipek/react-native-rave-webview",
   "version": "1.0.3",
   "description": "A web view wrapper for Flutterwave Rave payment gateway with support for React Native v0.60 and doesn't require any react native linking. For more info, checkout (https://github.com/creativeJoe007/react-native-rave-webview) ",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/creativeJoe007/react-native-rave-webview.git"
+    "url": "git+https://github.com/nipek/react-native-rave-webview.git"
   },
   "keywords": [
     "react-native",
@@ -20,14 +20,13 @@
     "react",
     "flutterwave"
   ],
-  "author": "creativeJoe007",
+  "author": "nipek",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/creativeJoe007/react-native-rave-webview/issues"
+    "url": "https://github.com/nipek/react-native-rave-webview/issues"
   },
-  "homepage": "https://github.com/creativeJoe007/react-native-rave-webview#readme",
+  "homepage": "https://github.com/nipek/react-native-rave-webview#readme",
   "dependencies": {
-    "react-native-webview": "^7.4.3"
   },
   "devDependencies": {}
 }
