@@ -1,22 +1,14 @@
-/**
- * Rave Web View
- * Author: Martins Joseph (creativeJoe007)
- */
-import React, {useState} from 'react';
-import {Modal, Text, View, TouchableOpacity, ActivityIndicator} from 'react-native';
-import { WebView } from 'react-native-webview';
+import React, { useState } from 'react';
+import { Modal, View, ActivityIndicator, WebView } from 'react-native';
 
-let showModal;
-let setShowModal;
-let isLoading;
-let setIsLoading;
+
 
 export const RaveWebView = props => {
-  [showModal, setShowModal] = useState(false);
-  [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(true);
 
   let Rave = {
-      html:  `
+    html: `
         <!DOCTYPE html>
         <html lang="en">
           <head>
@@ -45,7 +37,7 @@ export const RaveWebView = props => {
                   }],
                   onclose: function() {
                     var resp = {event:'cancelled'};
-                    window.ReactNativeWebView.postMessage(JSON.stringify(resp))
+                    window.postMessage(JSON.stringify(resp))
                   },
                   callback: function(response) {
                       var txref = response.tx.txRef;
@@ -54,10 +46,10 @@ export const RaveWebView = props => {
                           response.tx.chargeResponseCode == "0"
                       ) {
                             var resp = {event:'successful', transactionRef:txref};
-                            window.ReactNativeWebView.postMessage(JSON.stringify(resp))
+                            window.postMessage(JSON.stringify(resp))
                       } else {
                         var resp = {event:'error'};
-                        window.ReactNativeWebView.postMessage(JSON.stringify(resp))
+                        window.postMessage(JSON.stringify(resp))
                       }
                       x.close();
                   }
@@ -67,73 +59,46 @@ export const RaveWebView = props => {
           </body>
         </html>
       `
-    }
-
-    return (
-      <View>
-        <Modal
-          visible={showModal}
-          style={{backgroundColor: 'red'}}
-          animationType="slide"
-          transparent={false}>
-            <WebView
-                javaScriptEnabled={true}
-                javaScriptEnabledAndroid={true}
-                originWhitelist={['*']}
-                ref={( webView ) => this.MyWebView = webView}
-                source={Rave}
-                onMessage={(e)=>{messageRecived({onCancel: props.onCancel, onSuccess: props.onSuccess, onError: props.onError}, e.nativeEvent.data)}}
-                onLoadStart={() => setIsLoading(true)}
-                onLoadEnd={() => setIsLoading(false)}
-              />
-            {/*Start of Loading modal*/}
-            {
-              isLoading === true && (
-                <View style={{position: 'absolute', height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center', top: 0}}>
-                  <ActivityIndicator size="large" color={props.ActivityIndicatorColor || '#f5a623'} />
-                  <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      top: 20,
-                      right: 20,
-                      backgroundColor: '#f5a623',
-                      borderRadius: 4,
-                      padding: 10,
-                      paddingTop: 7,
-                      paddingBottom: 7
-                    }}
-                    onPress={() => {
-                      setShowModal(false)
-                      setIsLoading(false)
-                      props.onCancel();
-                    }}>
-                    <Text style={{color: 'white', fontSize: 12, fontWeight: 'bold'}}>Cancel</Text>
-                  </TouchableOpacity>
-                </View>
-              )
-            }
-        </Modal>
-        <TouchableOpacity style={props.btnStyles} onPress={() => setShowModal(true)}>
-          <Text style={props.textStyles}>{props.buttonText}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-}
-
-const messageRecived = async (props, data) => {
-  var webResponse = JSON.parse(data);
-  switch(webResponse.event){
-    case 'cancelled':
-      await setShowModal(false);
-      props.onCancel();
-    break;
-    case 'successful':
-      await setShowModal(false);
-      props.onSuccess(webResponse);
-      break;
-    default:
-      await setShowModal(false);
-      props.onError();
-    break;
   }
+  const messageRecived = async (props, data) => {
+    var webResponse = JSON.parse(data);
+    switch (webResponse.event) {
+      case 'cancelled':
+        await setShowModal(false);
+        props.onCancel();
+        break;
+      case 'successful':
+        await setShowModal(false);
+        props.onSuccess(webResponse);
+        break;
+      default:
+        await setShowModal(false);
+        props.onError();
+        break;
+    }
+  }
+  return (
+    <Modal
+      visible={showModal}
+     // style={{ backgroundColor: 'red' }}
+      animationType="slide"
+      transparent={false}>
+      <WebView
+        javaScriptEnabled={true}
+        javaScriptEnabledAndroid={true}
+        originWhitelist={['*']}
+        //  ref={(webView) => this.MyWebView = webView}
+        source={Rave}
+        onMessage={(e) => { messageRecived({ onCancel: props.onCancel, onSuccess: props.onSuccess, onError: props.onError }, e.nativeEvent.data) }}
+        onLoadStart={() => setIsLoading(true)}
+        onLoadEnd={() => setIsLoading(false)}
+      />
+      {
+        isLoading === true && <View style={{ position: 'absolute', height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center', top: 0 }}>
+          <ActivityIndicator size="large" color={props.ActivityIndicatorColor || '#f5a623'} />
+        </View>
+      }
+    </Modal>
+  );
 }
+
