@@ -4,7 +4,7 @@ import { Modal, View, ActivityIndicator, WebView } from 'react-native';
 
 
 export const RaveWebView = props => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(true);
 
   let Rave = {
